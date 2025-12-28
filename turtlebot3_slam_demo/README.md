@@ -1,21 +1,30 @@
-# 🔧 问题排查记录 (Troubleshooting Log)
+# TurtleBot3 Visual SLAM with RTAB-Map & Smooth Control
 
-在项目实施过程中，遇到了以下工程问题并已解决：
+This project demonstrates a robust Visual SLAM system using **ROS Noetic**, **Gazebo**, and **RTAB-Map** on a TurtleBot3 Waffle model. It features a custom smooth control algorithm and optimized configuration for resource-constrained environments (e.g., Virtual Machines with 4-core CPUs).
 
-### 1. Gazebo 仿真环境卡顿严重
-- **现象**: `Real Time Factor` 降至 0.1，机器人响应迟滞。
-- **分析**: 虚拟机分配资源不足，且 Gazebo 3D 渲染占用大量 GPU 资源。
-- **解决**: 
-  - 增加虚拟机内存至 4GB。
-  - 在建图过程中将 Gazebo 界面最小化，降低渲染开销。
-  - 调整 `rtabmap` 的检测频率参数 `Rtabmap/DetectionRate`。
+## 🚀 Key Features
 
-### 2. 无法生成 3D 点云
-- **现象**: RViz 中 PointCloud2 显示为空，但 Topic 有数据。
-- **分析**: 默认 Topic 为 `/rtabmap/cloud_map` (后端拼接图)，由于算力不足导致生成延迟。
-- **解决**: 将 RViz 订阅话题重定向至 `/camera/depth/points`，直接显示前端相机原始数据，解决可视化延迟问题。
+* **One-Click Launch Integration**: A custom `my_mapping.launch` file to start Gazebo simulation and RTAB-Map algorithms simultaneously with correct parameter initialization.
+* **Smooth Motion Control**: Replaced the jerky keyboard teleoperation with `auto_patrol.py`, implementing **linear acceleration smoothing** to prevent visual odometry drift and motion blur.
+* **Performance Optimization**: Tuned RTAB-Map detection rates (locked at **1.0 Hz**) to solve "Real-time loop closure detection failed" warnings on CPU-only environments.
 
-### 3. 机器人“撞墙”问题
-- **现象**: 键盘控制指令下发后，机器人持续移动直至碰撞。
-- **分析**: 网络延迟导致 `/cmd_vel` 指令堆积。
-- **解决**: 优化控制策略，采用“点按”方式发送指令，并时刻准备使用 `Space` 键（急停）进行制动。
+---
+
+## 🛠️ Prerequisites
+
+* **OS**: Ubuntu 20.04 (Focal)
+* **ROS Distro**: Noetic
+* **Packages**:
+    * `turtlebot3`
+    * `turtlebot3_simulations`
+    * `rtabmap_ros`
+
+---
+
+## 🏃 Usage
+
+### 1. Launch Simulation & SLAM
+Start the customized environment and the mapping algorithm in **Mapping Mode** (Localization disabled):
+
+```bash
+roslaunch turtlebot3_slam_demo my_mapping.launch
