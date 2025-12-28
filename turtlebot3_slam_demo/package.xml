@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>turtlebot3_slam_demo</name>
+  <version>0.1.0</version>
+  <description>基于RTAB-Map的TurtleBot3室内三维重建仿真工程</description>
+  <maintainer email="your_email@todo.todo">Author</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>rtabmap_ros</depend>
+  <depend>turtlebot3_bringup</depend>
+  <depend>turtlebot3_navigation</depend>
+  <depend>dynamic_reconfigure</depend>
+</package>
